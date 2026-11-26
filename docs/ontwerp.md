@@ -156,3 +156,15 @@ We werken stap voor stap en laten na elke stap het resultaat zien:
 1. **Stijlproef UI (nu).** Eén cliënt (de valse S. de Vries) volledig uitgewerkt als fysiek bureau: documenten slepen en stapelen, een paspoort dat je openslaat, inspecteren met een rode draad tussen tegenstrijdige velden, een stempel die je zelf op de akte zet, een LOT-formulier in de meldbak, de akte teruggeven over de balie, een cliënt die binnenloopt, en geluid. Alleen als de stijl bevalt, wordt de rest van het spel omgezet. Pagina: `proef.html`.
 2. **Straffen.** Geleidelijk, **niet herstelbaar**, iets zachter gebalanceerd. De gevolgen zijn tijdens de week al zichtbaar (krant, brieven van het BNT) in plaats van één afrekening op vrijdag. Er komt geen correctie-akte of late melding. De inspectie telt niet meer dubbel en de drempels worden lager.
 3. **Verhaallijnen.** *Verweven*: de lijnen raken elkaar (Kustvast BV, de koper van het appartement van De Vries, blijkt bij Ronnie te horen, enzovoort). *Grijze dilemma's*: zaken zonder eenduidig goede keuze (bijvoorbeeld Tine die wél wilsbekwaam is, terwijl haar kinderen de hebzuchtigen zijn).
+
+### Bijsturing na stijlproef 1 (27 november 2026)
+
+Oordeel van Jarno over `proef.html`: de graphics zijn goed genoeg, maar het lijkt te veel op Papers, Please (loket met glas, rode draden, stempelrek), en de poppetjes moeten echt beter.
+
+**Eigen identiteit: tussen "kantoorleven" en "dossieronderzoek" in, met het verhaal als belangrijkste.**
+- Geen loket. De cliënt zit tegenover je aan je bureau, in je eigen kantoor in Zandhoven. Ingrid, de telefoon, de post en de concurrent aan de overkant horen bij de wereld.
+- Uitdagender gameplay komt uit onderzoek: bellen (Grondboek, huisarts, vorige notaris), archiefdossiers opvragen (die komen pas later op de dag), en een tijdlijn leggen. Elk onderzoek kost tijd, en ondertussen wacht de cliënt of loopt de dag af.
+- Die middelen worden **in het verhaal opgebouwd**. Maandag lees je alleen en stel je vragen. Later laat Ingrid je de telefoonlijst zien, krijg je toegang tot het archief, enzovoort. Elke nieuwe mogelijkheid komt met een verhaalmoment, niet met een tutorialscherm.
+- Geen rode draden en stempelrek meer, maar notarieel eigen handelingen: passages markeren en aantekeningen maken in je dossierschrift, de akte voorlezen, tekenen met de vulpen bij passeren, de dossiermap dichtslaan bij weigeren, en 's avonds in stilte melden via het LOT-portaal.
+
+**Figuren.** Geschilderde portretten (SDXL lokaal, via `tools/gen_portraits.py`) in één vaste stijl, per figuur een paar expressies (neutraal, nerveus, boos), die wisselen tijdens het gesprek. De stijl kiezen we op basis van een test.
