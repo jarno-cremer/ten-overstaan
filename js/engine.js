@@ -12,12 +12,12 @@ export const DECISIONS = ['passeren', 'passeren_melden', 'weigeren', 'weigeren_m
 // reportBonus geldt alleen als er minstens één afwijking of observatie is vastgelegd.
 const RULESET = {
   eerlijk: {
-    passeren: {}, passeren_melden: { vis: 6, letter: 'overmelding' },
+    passeren: {}, passeren_melden: { vis: 6, letter: 'overmelding', over: true },
     weigeren: { vis: 8, letter: 'klacht' }, weigeren_melden: { vis: 8, letter: 'klacht' },
   },
   formeel: {
     passeren: { vis: 5, letter: 'formeel' }, passeren_melden: { vis: 5, letter: 'formeel' },
-    weigeren: {}, weigeren_melden: {},
+    weigeren: {}, weigeren_melden: { vis: 6, letter: 'overmelding', over: true },
   },
   melden: {
     passeren: { hid: 20, miss: 'Meldplichtige transactie niet gemeld' },
@@ -50,6 +50,7 @@ export function newGame() {
     decisions: {},          // caseId -> { decision, flags: [] }
     misses: [],             // { caseId, day, text, pts, heavy }
     bribes: 0,
+    overReports: 0,         // ongegronde meldingen
     dayLog: [],             // regels voor de dagafrekening van vandaag
     mail: [],               // post voor de dagafrekening van vandaag
     later: [],              // krantenkoppen voor een latere ochtend
@@ -148,6 +149,7 @@ export function decide(state, caseId, decision, flags = []) {
     }
   }
   if (eff.vis) state.druk += eff.vis;
+  if (eff.over) state.overReports += 1;
   if (eff.letter) state.mail.push(LETTERS[eff.letter](c));
   if (eff.hid) state.misses.push({ caseId, day: state.day, text: `${eff.miss} (${c.name})`, pts: eff.hid, heavy: !!eff.heavy });
   if (eff.reportBonus) {
@@ -212,8 +214,8 @@ export function checkEnding(state, { afterInspection = false, heavy = 0 } = {}) 
   if (state.kas < 0) return (state.ending = 'failliet');
   if (!afterInspection) return null;
   const lines = lineResults(state);
-  // Wie alles meldt, wordt door het LOT niet meer serieus genomen.
-  if (Object.values(lines).every(Boolean) && state.druk < 30) return (state.ending = 'klokkenluider');
+  // Wie meer dan één keer zonder grond meldt, wordt door het LOT niet meer serieus genomen.
+  if (Object.values(lines).every(Boolean) && state.overReports <= 1) return (state.ending = 'klokkenluider');
   if (state.bribes >= 3000) return (state.ending = 'welvarend');
   return (state.ending = 'keurig');
 }

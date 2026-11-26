@@ -8,7 +8,7 @@
 
 Je bent net benoemd tot notaris in Zandhoven, een slaperig provinciestadje. Je hebt een kantoor gehuurd, een secretaresse aangenomen en een praktijklening afgesloten. Elke dag komen er klanten aan je balie die een akte willen laten passeren. Meestal zijn het gewone mensen met gewone, soms absurde wensen. Soms is het iemand met een zonnebril, een envelop vol contant geld en grote haast.
 
-Je controleert elk dossier en beslist dan: passeren, weigeren of in stilte melden. Elke weigering kost omzet. Elke gemiste rode vlag is een risico bij de toezichthouder. Aan het eind van de week komt de inspecteur langs.
+Je controleert elk dossier en beslist dan: passeren, weigeren of in stilte melden. Elke weigering kost omzet. Elke gemiste rode vlag is een risico bij de toezichthouder. Aan het eind van de week komt de inspecteur langs en ziet alle dossiers in.
 
 Toon: droog-satirisch. Het notariaat is van zichzelf al komisch formeel; de humor zit in het contrast tussen die plechtige taal en wat er aan de balie gebeurt.
 
@@ -24,7 +24,7 @@ Fictief land, met processen die gebaseerd zijn op het Nederlandse notariaat. Nam
 | Register Uiteindelijk Belanghebbenden (RUB) | UBO-register | Wie er echt achter een BV zit |
 | Wet Integer Geldverkeer (WIG) | Wwft | Cliëntonderzoek en meldplicht |
 | Loket Ongebruikelijke Transacties (LOT) | FIU-Nederland | Hier meld je in stilte. De klant mag het niet weten. |
-| Bureau Notarieel Toezicht (BNT) | BFT | Inspecteert vrijdag een steekproef van je dossiers |
+| Bureau Notarieel Toezicht (BNT) | BFT | Inspecteert vrijdag al je dossiers van de week |
 | De Tuchtkamer | Kamer voor het notariaat | Spreekt straffen uit, tot en met ontzetting uit het ambt |
 | Circulaire van de Orde | KNB-berichten | Elke ochtend een nieuwe regel (zoals de bulletins in Papers, Please) |
 
@@ -71,7 +71,7 @@ Harde eindes, elk met een eigen eindscherm in de vorm van een officieel document
 | **Ontzet uit het ambt** | Toezichtsdruk 100, of de inspectie vindt twee zware missers. De uitspraak van de Tuchtkamer is het eindscherm. |
 | **Keurig en blut** | Week overleefd, alles gemeld, maar de kas is net positief. "De praktijk is gered. Voorlopig." |
 | **Welvarend, met schaduw** | Week overleefd met veel spoedtoeslagen. Epiloog: Ronnie belt maandag weer. |
-| **De klokkenluider** | Week overleefd met alle vier de louche verhaallijnen correct gemeld en toezichtsdruk onder 30 (wie alles meldt, wordt niet serieus genomen). Krantenkop over de opgerolde fraude, zonder je naam. |
+| **De klokkenluider** | Week overleefd met alle vier de louche verhaallijnen correct gemeld en hooguit één ongegronde melding (wie alles meldt, wordt niet serieus genomen). Krantenkop over de opgerolde fraude, zonder je naam. |
 
 ## Vier verhaallijnen
 
@@ -115,7 +115,7 @@ Zo leert de speler dat niet elke rare klant louche is en niet elke nette klant e
 | Di | 4 | Het Grondboek | Ronnie (1), Tine (1) |
 | Wo | 5 | Handelsregister en RUB | Ronnie (2), Henk |
 | Do | 5 | Circulaire: contant boven € 10.000 is meldplichtig | Ronnie (3), Tine (2), De Vries (2) |
-| Vr | 4 + inspectie | BNT-steekproef, ontknopingen | Ronnie (4), De Vries (3) |
+| Vr | 4 + inspectie | BNT-inspectie, ontknopingen | Ronnie (4), De Vries (3) |
 
 Verwachte speeltijd: 25 tot 35 minuten.
 

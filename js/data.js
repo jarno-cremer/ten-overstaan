@@ -280,7 +280,7 @@ export const CASES = {
     ],
     questions: [
       { flag: 'Henk krijgt € 500 voor zijn handtekening (katvanger)', dismiss: true, q: 'Dennis, wilt u even in de wachtkamer wachten?', a: 'DENNIS: ...Prima. (deur dicht) HENK: Weet u, notaris, Dennis geeft me vijfhonderd euro als ik vandaag teken. Dat is veel geld voor een handtekening, hè?' },
-      { q: 'Wat gaat uw BV precies doen, meneer Veldkamp?', a: '(kijkt op briefje) Internationale... handel. In goederen. (kijkt naar Dennis) Klopt dat?' },
+      { q: 'Wat gaat uw BV precies doen, meneer Veldkamp?', a: '(kijkt op briefje) Internationale... handel. In goederen. (kijkt naar de deur) Klopt dat?' },
       { unlock: 'storter', q: 'Waarom stort Dennis het kapitaal?', a: 'HENK: Dennis zegt dat dat beter is voor de belasting. Hij is slim, Dennis. Hij heeft ook een auto met een telefoon erin.' },
     ],
     react: { pass: 'HENK: Hè hè. Dat was het? Dan ga ik maar eens internationaal handelen.', refuse: 'DENNIS: Kom oom, we gaan. Er zijn notarissen genoeg.' },
@@ -395,7 +395,7 @@ export const CASES = {
 
   tine2_taart: {
     day: 4, scene: true, when: [{ tine1: 'refuse' }], name: 'Mevrouw T. Ooms', portrait: 'tine',
-    lines: ['Ik kom u even een stukje appeltaart brengen. Zelf gebakken.', 'Marco bleek nog drie andere "vriendinnen" te hebben in de zorgflat. De politie is langs geweest.', 'Mijn dochter zegt dat u een verstandige notaris bent. Dat zei ze vroeger nooit over iemand.'],
+    lines: ['Ik kom u even een stukje appeltaart brengen. Zelf gebakken.', 'Marco bleek nog drie andere "vriendinnen" te hebben in de zorgflat. Mijn dochter heeft het uitgezocht; hij is er niet meer welkom.', 'Mijn dochter zegt dat u een verstandige notaris bent. Dat zei ze vroeger nooit over iemand.'],
   },
 
   devries2: {

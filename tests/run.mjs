@@ -111,6 +111,15 @@ ok(E.checkPair('jansen', 'intake.naam', 'akte.naam') === null, 'jansen: niet-afw
   const { s } = play((cid, c) => (c.kind === 'eerlijk' ? 'passeren_melden' : null));
   ok(s.ending !== 'klokkenluider' && s.druk >= 30, `alles melden levert nog klokkenluider op (druk ${s.druk})`);
 }
+// Twee eerlijke cliënten onnodig melden kost de klokkenluider; één mag.
+{
+  const two = play((cid) => (['jansen', 'bos'].includes(cid) ? 'passeren_melden' : null)).s;
+  ok(two.ending !== 'klokkenluider', 'twee ongegronde meldingen geven nog klokkenluider');
+  const one = play((cid) => (cid === 'jansen' ? 'passeren_melden' : null)).s;
+  ok(one.ending === 'klokkenluider', `één ongegronde melding: einde ${one.ending}`);
+  const formal = play((cid) => (cid === 'yildiz1' ? 'weigeren_melden' : null)).s;
+  ok(formal.overReports === 1, 'formele zaak weigeren+melden telt niet als ongegronde melding');
+}
 // Weigeren zonder vastgelegde afwijking kost iets.
 {
   const s = E.newGame();

@@ -58,10 +58,14 @@ with sync_playwright() as p:
                     continue
                 if not page.query_selector(".office.inspecting"):
                     page.keyboard.press("Space")
-                page.click(f"[data-ref='{an['a']}']")
-                page.click(f"[data-ref='{an['b']}']")
+                a, b = (an["alt"][0] if an.get("alt") else [an["a"], an["b"]])
+                page.click(f"[data-ref='{a}']")
+                page.click(f"[data-ref='{b}']")
                 if an["label"] not in page.text_content(".notes"):
                     errors.append(f"{cid}: afwijking {an['id']} niet vastgelegd via de interface")
+                for ref in (a, b):
+                    if "flagged" not in (page.get_attribute(f"[data-ref='{ref}']", "class") or ""):
+                        errors.append(f"{cid}: aangeklikt veld {ref} niet gemarkeerd")
             if cid == "devries1":
                 snap(f"d{day}-{n:02d}-{cid}-inspectie")
             if page.query_selector(".office.inspecting"):

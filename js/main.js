@@ -71,7 +71,7 @@ function startCase() {
   const cid = E.currentCaseId(S);
   if (!cid) return showDayEnd();
   const c = CASES[cid];
-  cur = { cid, slot: S.idx, found: [], obs: [], asked: new Set(), selected: null, decided: false, inspect: false, gone: false,
+  cur = { cid, slot: S.idx, found: [], marked: [], obs: [], asked: new Set(), selected: null, decided: false, inspect: false, gone: false,
     dialogue: (c.scene ? c.lines : c.intro).map((t) => ({ who: 'klant', text: t })) };
   renderDesk();
 }
@@ -104,10 +104,7 @@ function fieldHTML(docId, f) {
 }
 
 function foundRefs() {
-  const c = CASES[cur.cid];
-  const s = new Set();
-  for (const an of c.anomalies || []) if (cur.found.includes(an.id)) { s.add(an.a); s.add(an.b); }
-  return s;
+  return new Set(cur.marked);
 }
 
 function docHTML(d, i) {
@@ -216,8 +213,10 @@ function clickField(ref) {
   if (!cur.inspect || cur.decided) return;
   if (!cur.selected) { cur.selected = ref; return renderDesk(); }
   if (cur.selected === ref) { cur.selected = null; return renderDesk(); }
-  const an = E.checkPair(cur.cid, cur.selected, ref);
+  const first = cur.selected;
+  const an = E.checkPair(cur.cid, first, ref);
   cur.selected = null;
+  if (an) cur.marked.push(first, ref);
   if (an && !cur.found.includes(an.id)) {
     cur.found.push(an.id);
     renderDesk();
