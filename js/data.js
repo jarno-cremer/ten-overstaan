@@ -283,7 +283,7 @@ export const CASES = {
       { q: 'Wat gaat uw BV precies doen, meneer Veldkamp?', a: '(kijkt op briefje) Internationale... handel. In goederen. (kijkt naar de deur) Klopt dat?' },
       { unlock: 'storter', q: 'Waarom stort Dennis het kapitaal?', a: 'HENK: Dennis zegt dat dat beter is voor de belasting. Hij is slim, Dennis. Hij heeft ook een auto met een telefoon erin.' },
     ],
-    react: { pass: 'HENK: Hè hè. Dat was het? Dan ga ik maar eens internationaal handelen.', refuse: 'DENNIS: Kom oom, we gaan. Er zijn notarissen genoeg.' },
+    react: { pass: 'HENK: Hè hè. Dat was het? Dan ga ik maar eens internationaal handelen.', refuse: 'HENK: Dan moet ik het Dennis vertellen. Die wordt niet blij. Er zijn notarissen genoeg, zegt hij altijd.' },
     out: { pass: 'Veldkamp Global Trading BV is ingeschreven in het Handelsregister.', refuse: 'Henk Veldkamp en Dennis zijn vertrokken.', refuseReport: 'Het LOT bevestigt uw melding over een mogelijke katvanger-constructie.' },
     later: { pass: { day: 5, text: 'Gepensioneerde Henk V. (71) aansprakelijk voor miljoenenfraude met "handels-BV"' } },
   },

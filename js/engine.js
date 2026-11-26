@@ -13,10 +13,10 @@ export const DECISIONS = ['passeren', 'passeren_melden', 'weigeren', 'weigeren_m
 const RULESET = {
   eerlijk: {
     passeren: {}, passeren_melden: { vis: 6, letter: 'overmelding', over: true },
-    weigeren: { vis: 8, letter: 'klacht' }, weigeren_melden: { vis: 8, letter: 'klacht' },
+    weigeren: { vis: 8, letter: 'klacht' }, weigeren_melden: { vis: 8, letter: 'klacht', over: true },
   },
   formeel: {
-    passeren: { vis: 5, letter: 'formeel' }, passeren_melden: { vis: 5, letter: 'formeel' },
+    passeren: { vis: 5, letter: 'formeel' }, passeren_melden: { vis: 5, letter: 'formeel', over: true },
     weigeren: {}, weigeren_melden: { vis: 6, letter: 'overmelding', over: true },
   },
   melden: {

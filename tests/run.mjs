@@ -119,6 +119,13 @@ ok(E.checkPair('jansen', 'intake.naam', 'akte.naam') === null, 'jansen: niet-afw
   ok(one.ending === 'klokkenluider', `één ongegronde melding: einde ${one.ending}`);
   const formal = play((cid) => (cid === 'yildiz1' ? 'weigeren_melden' : null)).s;
   ok(formal.overReports === 1, 'formele zaak weigeren+melden telt niet als ongegronde melding');
+  // Elke melding van een eerlijke of formele zaak telt als ongegrond, in welke vorm ook.
+  for (const kind of ['eerlijk', 'formeel']) for (const d of ['passeren_melden', 'weigeren_melden']) {
+    const cid = Object.keys(CASES).find((k) => CASES[k].kind === kind);
+    const s = E.newGame();
+    E.decide(s, cid, d, []);
+    ok(s.overReports === 1, `${kind} ${d} telt niet als ongegronde melding`);
+  }
 }
 // Weigeren zonder vastgelegde afwijking kost iets.
 {
