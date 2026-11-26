@@ -146,3 +146,13 @@ Het prototype is af als:
 ## Realisme
 
 De regels zijn vereenvoudigd. Wat in grote lijnen klopt met het Nederlandse notariaat: cliëntonderzoek en meldplicht onder de Wwft, het tipping-off-verbod (de klant mag niet weten dat je meldt), ABC-transacties als bekend witwassignaal, de katvanger als bestuurder, het toetsen van wilsbekwaamheid bij een testament, de ministerieplicht en het BFT-toezicht met de tuchtrechter. Bedragen en kansen zijn spelbalans, geen werkelijkheid.
+
+## Versie 0.2: richting (feedback Jarno, 26 november 2026)
+
+Oordeel over de proof of concept: werkt, maar UI/UX en frontend zijn simplistisch, de verhaallijnen zijn leuk maar simpel en voorspelbaar, en aan het einde word je te zwaar gestraft voor fouten.
+
+We werken stap voor stap en laten na elke stap het resultaat zien:
+
+1. **Stijlproef UI (nu).** Eén cliënt (de valse S. de Vries) volledig uitgewerkt als fysiek bureau: documenten slepen en stapelen, een paspoort dat je openslaat, inspecteren met een rode draad tussen tegenstrijdige velden, een stempel die je zelf op de akte zet, een LOT-formulier in de meldbak, de akte teruggeven over de balie, een cliënt die binnenloopt, en geluid. Alleen als de stijl bevalt, wordt de rest van het spel omgezet. Pagina: `proef.html`.
+2. **Straffen.** Geleidelijk, **niet herstelbaar**, iets zachter gebalanceerd. De gevolgen zijn tijdens de week al zichtbaar (krant, brieven van het BNT) in plaats van één afrekening op vrijdag. Er komt geen correctie-akte of late melding. De inspectie telt niet meer dubbel en de drempels worden lager.
+3. **Verhaallijnen.** *Verweven*: de lijnen raken elkaar (Kustvast BV, de koper van het appartement van De Vries, blijkt bij Ronnie te horen, enzovoort). *Grijze dilemma's*: zaken zonder eenduidig goede keuze (bijvoorbeeld Tine die wél wilsbekwaam is, terwijl haar kinderen de hebzuchtigen zijn).

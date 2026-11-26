@@ -1,12 +1,12 @@
 // Tekent een portret als SVG uit een paar kenmerken (zie PORTRAITS in data.js).
-export function portraitSVG(p, { photo = false } = {}) {
+export function portraitSVG(p, { photo = false, bare = false } = {}) {
   const bg = photo ? '#e9e4d8' : '#d9cdb4';
   const ink = '#2a2420';
   const old = p.age === 'oud';
   const young = p.age === 'jong';
   const headRx = p.sex === 'v' ? 17 : 18;
   const parts = [];
-  parts.push(`<rect width="100" height="120" fill="${bg}"/>`);
+  if (!bare) parts.push(`<rect width="100" height="120" fill="${bg}"/>`);
   // haar achter het hoofd
   if (p.hair === 'lang') parts.push(`<path d="M30 52 Q28 20 50 18 Q72 20 70 52 L74 92 L26 92 Z" fill="${p.hc}"/>`);
   if (p.hair === 'knot') parts.push(`<circle cx="50" cy="20" r="9" fill="${p.hc}"/>`);
