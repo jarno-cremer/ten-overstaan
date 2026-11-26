@@ -27,12 +27,12 @@ for (const day of [1, 2, 3, 4, 5]) {
       if (d.text) for (const m of d.text.matchAll(/\{(\w+)\}/g)) ok(d.fields.some((f) => f[0] === m[1]), `${cid}.${d.id}: {${m[1]}} zonder veld`);
     }
     // Elke afwijking verwijst naar twee bestaande velden die echt verschillen.
-    for (const an of c.anomalies || []) {
-      const va = E.fieldValue(cid, day, an.a), vb = E.fieldValue(cid, day, an.b);
+    for (const an of c.anomalies || []) for (const [a, b] of E.anomalyPairs(an)) {
+      const va = E.fieldValue(cid, day, a), vb = E.fieldValue(cid, day, b);
       const resolve = (v) => (typeof v === 'string' && PORTRAITS[v] ? PORTRAITS[v] : v);
-      ok(va !== undefined, `${cid}/${an.id}: veld ${an.a} bestaat niet`);
-      ok(vb !== undefined, `${cid}/${an.id}: veld ${an.b} bestaat niet`);
-      ok(JSON.stringify(resolve(va)) !== JSON.stringify(resolve(vb)), `${cid}/${an.id}: ${an.a} en ${an.b} zijn gelijk`);
+      ok(va !== undefined, `${cid}/${an.id}: veld ${a} bestaat niet`);
+      ok(vb !== undefined, `${cid}/${an.id}: veld ${b} bestaat niet`);
+      ok(JSON.stringify(resolve(va)) !== JSON.stringify(resolve(vb)), `${cid}/${an.id}: ${a} en ${b} zijn gelijk`);
     }
     for (const q of c.questions || []) if (q.unlock) ok((c.anomalies || []).some((a) => a.id === q.unlock), `${cid}: vraag ontgrendelt onbekende ${q.unlock}`);
     // Een fraude- of meldzaak moet op te sporen zijn.
@@ -89,6 +89,34 @@ for (const pol of [...Object.values(scripts), () => 'weigeren', (cid) => (cid ==
   play(pol).s.seen.forEach((x) => seenAll.add(x));
 }
 for (const cid of Object.keys(CASES)) ok(seenAll.has(cid), `zaak/scène ${cid} komt in geen enkel script voor`);
+
+// ---------- 3. Regressies uit de evaluatie van 26-11 ----------
+// Equivalente tegenstrijdigheden tellen ook.
+ok(E.checkPair('devries1', 'intake.aanhef', 'akte.aanhef')?.id === 'geslacht', 'devries1: aanhef intake vs akte niet herkend');
+ok(E.checkPair('devries1', 'intake.geboren', 'akte.geboren')?.id === 'geboren', 'devries1: geboren intake vs akte niet herkend');
+ok(E.checkPair('ronnie1', 'betaal.bedrag', 'circ.r2')?.id === 'cash', 'ronnie1: bedrag vs regel 2 niet herkend');
+ok(E.checkPair('jansen', 'intake.naam', 'akte.naam') === null, 'jansen: niet-afwijking herkend als afwijking');
+// Ronnie1 weigeren + melden met afwijking: geen klacht en de lijn telt als correct gemeld.
+{
+  const { s } = play((cid) => (cid === 'ronnie1' ? 'weigeren_melden' : null));
+  ok(s.ending === 'klokkenluider', `ronnie1 weigeren+melden: einde ${s.ending}, verwacht klokkenluider`);
+}
+// Ronnie brengt geen kerstpakket als je hem donderdag weigerde.
+{
+  const { trail } = play((cid) => (cid === 'ronnie2' ? 'passeren' : cid === 'ronnie3' ? 'weigeren' : null));
+  ok(!trail.includes('ronnie4_blij(scène)'), 'ronnie4_blij verschijnt na weigering van ronnie3');
+}
+// Alles melden is geen gratis klokkenluider.
+{
+  const { s } = play((cid, c) => (c.kind === 'eerlijk' ? 'passeren_melden' : null));
+  ok(s.ending !== 'klokkenluider' && s.druk >= 30, `alles melden levert nog klokkenluider op (druk ${s.druk})`);
+}
+// Weigeren zonder vastgelegde afwijking kost iets.
+{
+  const s = E.newGame();
+  E.decide(s, 'devries1', 'weigeren_melden', []);
+  ok(s.druk > 0, 'melding zonder afwijking is gratis');
+}
 
 console.log(fails ? `\n${fails} fout(en)` : '\nAlle tests geslaagd');
 process.exit(fails ? 1 : 0);

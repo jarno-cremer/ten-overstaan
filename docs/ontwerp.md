@@ -44,20 +44,22 @@ Per klant:
    - **Weigeren en melden.**
 5. **Dagafsluiting.** Een overzicht van het honorarium, de kosten, de krantenkop van de dag en post (brieven van het BNT, bedankjes, dreigbrieven).
 
-Moeilijkheid per dag: meer klanten, meer documentsoorten, een nieuwe regel uit de circulaire en minder tijd. Er is een klok: om 17:00 gaat de deur dicht, en wie dan nog wacht, komt morgen terug of gaat naar de concurrent.
+Moeilijkheid per dag: meer klanten, meer documentsoorten, een nieuwe regel uit de circulaire en minder tijd. Er is een klok. In het prototype is die alleen sfeer; een echte deadline om 17:00 staat op de lijst voor later.
 
 ## Twee meters
 
-**Geld (zichtbaar, de kas).** Je begint met € 6.000. Vaste lasten: huur en het salaris van je secretaresse per dag, plus vrijdag de aflossing van de lening (€ 3.500). Honoraria: levering € 900, hypotheek € 600, BV-oprichting € 750, testament € 350, samenlevingscontract € 400. Louche klanten bieden een "spoedtoeslag" van € 1.500 tot € 5.000.
+**Geld (zichtbaar, de kas).** Je begint met € 1.500. Vaste lasten: € 600 per dag (huur € 350, salaris Ingrid € 250), plus vrijdag de aflossing van de lening (€ 4.500). Honoraria: levering € 900, hypotheek € 600, BV-oprichting € 750, testament € 350, samenlevingscontract € 400. Louche klanten bieden een "spoedtoeslag" van € 1.500 tot € 5.000.
 
 **Toezichtsdruk (zichtbaar als meter van 0 tot 100, de oorzaken deels verborgen).**
 - Passeren met een gemiste rode vlag: +10 tot +25, maar je merkt het pas bij de inspectie of door een krantenbericht.
 - Een melding vergeten die verplicht was: +20.
 - Een formele fout, zoals een verlopen ID geaccepteerd of een ontbrekende paraaf: +5.
 - Zonder grond weigeren (een klacht wegens ministerieplicht): +8.
-- Een terechte melding: −5. Het BNT ziet een zorgvuldige notaris.
+- Een terechte melding (met een vastgelegde afwijking): −5. Het BNT ziet een zorgvuldige notaris.
+- Een melding zonder vastgelegde afwijking: +3. Een eerlijke cliënt melden: +6.
+- Een meldplichtige maar echt verdachte zaak (zoals Ronnie op dinsdag) mag je ook weigeren en melden, zonder klacht.
 
-Vrijdag trekt de BNT-inspectie een steekproef uit je dossiers van de week. Elke gevonden misser telt dubbel.
+Vrijdag ziet de BNT-inspectie alle dossiers van de week in. Elke verborgen misser telt dan dubbel.
 
 ## Eindes
 
@@ -69,7 +71,7 @@ Harde eindes, elk met een eigen eindscherm in de vorm van een officieel document
 | **Ontzet uit het ambt** | Toezichtsdruk 100, of de inspectie vindt twee zware missers. De uitspraak van de Tuchtkamer is het eindscherm. |
 | **Keurig en blut** | Week overleefd, alles gemeld, maar de kas is net positief. "De praktijk is gered. Voorlopig." |
 | **Welvarend, met schaduw** | Week overleefd met veel spoedtoeslagen. Epiloog: Ronnie belt maandag weer. |
-| **De klokkenluider** | Week overleefd met alle vier de louche verhaallijnen correct gemeld. Krantenkop over de opgerolde fraude, zonder je naam. |
+| **De klokkenluider** | Week overleefd met alle vier de louche verhaallijnen correct gemeld en toezichtsdruk onder 30 (wie alles meldt, wordt niet serieus genomen). Krantenkop over de opgerolde fraude, zonder je naam. |
 
 ## Vier verhaallijnen
 

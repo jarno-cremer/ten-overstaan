@@ -11,6 +11,7 @@ export const PORTRAITS = {
   ronnie:   P({ hair: 'kort', hc: '#1d1d1d', shades: 1, coat: '#2b2b33', tie: '#a3262a', skin: '#e2b48c' }),
   tine:     P({ sex: 'v', age: 'oud', hair: 'krul', hc: '#e4e4e4', glasses: 1, coat: '#8a6f8f' }),
   marco:    P({ age: 'jong', hair: 'kort', hc: '#6b4a2a', coat: '#34506b', beard: 'stoppel' }),
+  noor:     P({ sex: 'v', age: 'jong', hair: 'knot', hc: '#c0703a', coat: '#3f6b6b' }),
   vandijk:  P({ age: 'jong', hair: 'krul', hc: '#2a1d14', skin: '#c99872', coat: '#a4643a' }),
   yildiz:   P({ sex: 'v', hair: 'lang', hc: '#1f1712', skin: '#d6a77f', coat: '#4c6b5a' }),
   henk:     P({ age: 'oud', hair: 'kaal', hc: '#ddd', coat: '#7a6d58', beard: 'geen', glasses: 1 }),
@@ -135,8 +136,8 @@ export const CASES = {
     ],
     anomalies: [
       { id: 'foto', a: 'id.foto', b: 'klant', label: 'Pasfoto lijkt niet op de verschijnende persoon' },
-      { id: 'geslacht', a: 'id.geslacht', b: 'intake.aanhef', label: 'Paspoort zegt V, intake zegt "de heer"' },
-      { id: 'geboren', a: 'id.geboren', b: 'akte.geboren', label: 'Geboortedatum paspoort wijkt af van de akte' },
+      { id: 'geslacht', a: 'id.geslacht', b: 'intake.aanhef', alt: [['intake.aanhef', 'akte.aanhef']], label: 'Aanhef wisselt: paspoort V en akte "mevrouw", intake "de heer"' },
+      { id: 'geboren', a: 'id.geboren', b: 'akte.geboren', alt: [['intake.geboren', 'akte.geboren']], label: 'Geboortedatum wijkt af van de akte' },
     ],
     questions: [
       { unlock: 'foto', q: 'De foto in uw paspoort lijkt niet op u.', a: 'Oude foto. Ik ben sindsdien... veranderd. Dat doen mensen.' },
@@ -149,7 +150,7 @@ export const CASES = {
 
   // ======== DINSDAG ========
   ronnie1: {
-    day: 2, kind: 'melden', fee: 900, line: 'ronnie', name: 'De heer R. Brouwer', portrait: 'ronnie',
+    day: 2, kind: 'melden', okRefuse: true, fee: 900, line: 'ronnie', name: 'De heer R. Brouwer', portrait: 'ronnie',
     intro: ['Ronnie Brouwer. Zakenman in onroerend goed. U bent nieuw, hè? Leuk kantoortje.', 'Ik koop het pand Kerkstraat 12. Veertigduizend aanbetaald, cash. Dat is toch geen probleem?'],
     docs: [
       intake({ aanhef: 'de heer', naam: 'R. Brouwer', geboren: '21-07-1979', adres: 'Villapark 1, Zandhoven', wens: 'Aankoop Kerkstraat 12' }),
@@ -160,7 +161,7 @@ export const CASES = {
         [['datum', 'Datum', '8 december 2026'], ['aanhef', 'Aanhef', 'de heer'], ['naam', 'Naam', 'Ronald Brouwer'], ['geboren', 'Geboren', '21-07-1979'], ['object', 'Object', 'Kerkstraat 12 te Zandhoven'], ['koopsom', 'Koopsom', '€ 450.000'], ['aanbetaling', 'Aanbetaling', '€ 40.000 contant']]),
     ],
     anomalies: [
-      { id: 'cash', a: 'betaal.wijze', b: 'circ.r2', label: 'Contante aanbetaling boven € 10.000' },
+      { id: 'cash', a: 'betaal.wijze', b: 'circ.r2', alt: [['betaal.bedrag', 'circ.r2'], ['akte.aanbetaling', 'circ.r2']], label: 'Contante aanbetaling boven € 10.000' },
     ],
     questions: [
       { unlock: 'cash', q: 'Waar komt die veertigduizend contant vandaan?', a: 'Uit mijn zaak. Ik heb een autowasstraat. Mensen betalen cash. Veel mensen. Heel veel auto\'s.' },
@@ -175,8 +176,9 @@ export const CASES = {
     docs: [
       intake({ aanhef: 'de heer', naam: 'S. van Dijk (en N. Kok)', geboren: '30-01-1998', adres: 'Esdoornstraat 21, Zandhoven', wens: 'Samenlevingscontract' }),
       id({ foto: PORTRAITS.vandijk, naam: 'van Dijk', voornamen: 'Sem', geslacht: 'M', geboren: '30-01-1998', nummer: 'IK20CD44', geldig: '05-05-2033', kaart: true }),
-      akte('Samenlevingscontract', 'Heden, {datum}, verschenen {naam} en Noor Kok, samenwonend te Zandhoven. Partijen regelen hun samenleving. Artikel 9: {airfryer}.',
-        [['datum', 'Datum', '8 december 2026'], ['naam', 'Naam', 'Sem van Dijk'], ['airfryer', 'Artikel 9', 'de airfryer is gemeenschappelijk eigendom']]),
+      id2({ foto: PORTRAITS.noor, naam: 'Kok', voornamen: 'Noor', geslacht: 'V', geboren: '14-08-1997', nummer: 'NW3375N9', geldig: '22-02-2030' }),
+      akte('Samenlevingscontract', 'Heden, {datum}, verschenen {naam} en {naam2}, samenwonend te Zandhoven. Partijen regelen hun samenleving. Artikel 9: {airfryer}.',
+        [['datum', 'Datum', '8 december 2026'], ['naam', 'Naam', 'Sem van Dijk'], ['naam2', 'Naam', 'Noor Kok'], ['airfryer', 'Artikel 9', 'de airfryer is gemeenschappelijk eigendom']]),
     ],
     anomalies: [],
     questions: [
@@ -199,8 +201,8 @@ export const CASES = {
         [['datum', 'Datum', '8 december 2026'], ['aanhef', 'Aanhef', 'mevrouw'], ['naam', 'Naam', 'Tine Ooms'], ['geboren', 'Geboren', '12-05-1938'], ['erfgenaam', 'Erfgenaam', 'Marco de Bruijn (34)']]),
     ],
     anomalies: [
-      { id: 'zondag', a: 'arts.datum', b: 'arts.spreekuur', label: 'Artsverklaring gedateerd op een zondag' },
-      { id: 'jaartal', a: 'arts.patient', b: 'id.geboren', label: 'Geboortejaar op artsverklaring klopt niet' },
+      { id: 'zondag', a: 'arts.datum', b: 'arts.spreekuur', alt: [['arts.datum', 'akte.datum']], label: 'Artsverklaring gedateerd op een zondag' },
+      { id: 'jaartal', a: 'arts.patient', b: 'id.geboren', alt: [['arts.patient', 'intake.geboren'], ['arts.patient', 'akte.geboren']], label: 'Geboortejaar op artsverklaring klopt niet' },
     ],
     questions: [
       { flag: 'Marco wil niet weg; mevrouw Ooms praat hem na', q: 'Meneer, wilt u even in de wachtkamer plaatsnemen?', a: 'MARCO: Echt niet. Ze heeft mij nodig. Toch, Tine? TINE: ...Marco zegt dat mijn kinderen me in een tehuis willen stoppen.' },
@@ -222,7 +224,7 @@ export const CASES = {
         [['datum', 'Datum', '8 december 2026'], ['aanhef', 'Aanhef', 'mevrouw'], ['naam', 'Naam', 'Ayse Yildiz'], ['geboren', 'Geboren', '09-11-1981'], ['object', 'Object', 'Wilgenhof 3 te Zandhoven'], ['koopsom', 'Koopsom', '€ 345.000']]),
     ],
     anomalies: [
-      { id: 'verlopen', a: 'id.geldig', b: 'akte.datum', label: 'Paspoort is verlopen' },
+      { id: 'verlopen', a: 'id.geldig', b: 'akte.datum', alt: [['id.geldig', 'circ.r1']], label: 'Paspoort is verlopen' },
     ],
     questions: [
       { unlock: 'verlopen', q: 'Uw paspoort is verlopen sinds oktober vorig jaar.', a: 'O nee. Echt? Ik heb er een afspraak voor bij de gemeente, donderdagochtend. Kan het niet toch?' },
@@ -244,8 +246,8 @@ export const CASES = {
         [['datum', 'Datum', '9 december 2026'], ['aanhef', 'Aanhef', 'de heer'], ['naam', 'Naam', 'Ronald Brouwer'], ['object', 'Object', 'Kerkstraat 12 te Zandhoven'], ['koper', 'Koper', 'Zuidas Prime Invest BV'], ['koopsom', 'Koopsom', '€ 1.150.000']]),
     ],
     anomalies: [
-      { id: 'abc', a: 'akte.koopsom', b: 'grond.koopsom', label: 'Pand gisteren gekocht voor € 450.000, nu verkocht voor € 1.150.000' },
-      { id: 'zelf', a: 'rub.ubo', b: 'akte.naam', label: 'Koper is een BV van de verkoper zelf' },
+      { id: 'abc', a: 'akte.koopsom', b: 'grond.koopsom', alt: [['akte.koopsom', 'circ.r3'], ['grond.sinds', 'circ.r3'], ['grond.sinds', 'akte.datum']], label: 'Pand gisteren gekocht voor € 450.000, nu verkocht voor € 1.150.000' },
+      { id: 'zelf', a: 'rub.ubo', b: 'akte.naam', alt: [['rub.ubo', 'grond.eigenaar'], ['rub.ubo', 'intake.naam']], label: 'Koper is een BV van de verkoper zelf' },
     ],
     questions: [
       { unlock: 'abc', q: 'Het pand is in één dag € 700.000 meer waard geworden?', a: 'De markt, notaris. Heeft u de krant niet gelezen? Gezonde markt.' },
@@ -273,13 +275,13 @@ export const CASES = {
         [['datum', 'Datum', '9 december 2026'], ['aanhef', 'Aanhef', 'de heer'], ['naam', 'Naam', 'Hendrik Veldkamp'], ['bv', 'Naam BV', 'Veldkamp Global Trading BV']]),
     ],
     anomalies: [
-      { id: 'postbus', a: 'hr.adres', b: 'circ.r4', label: 'Vestigingsadres is een postbus' },
-      { id: 'storter', a: 'betaal.van', b: 'rub.ubo', label: 'Dennis stort het kapitaal, maar Henk staat als enige belanghebbende in het RUB' },
+      { id: 'postbus', a: 'hr.adres', b: 'circ.r4', alt: [['hr.adres', 'intake.adres']], label: 'Vestigingsadres is een postbus' },
+      { id: 'storter', a: 'betaal.van', b: 'rub.ubo', alt: [['betaal.van', 'circ.r4'], ['betaal.van', 'hr.bestuur'], ['betaal.van', 'akte.naam']], label: 'Dennis stort het kapitaal, maar Henk staat als enige belanghebbende in het RUB' },
     ],
     questions: [
-      { flag: 'Henk krijgt € 500 voor zijn handtekening (katvanger)', q: 'Dennis, wilt u even in de wachtkamer wachten?', a: 'DENNIS: ...Prima. (deur dicht) HENK: Weet u, notaris, Dennis geeft me vijfhonderd euro als ik vandaag teken. Dat is veel geld voor een handtekening, hè?' },
+      { flag: 'Henk krijgt € 500 voor zijn handtekening (katvanger)', dismiss: true, q: 'Dennis, wilt u even in de wachtkamer wachten?', a: 'DENNIS: ...Prima. (deur dicht) HENK: Weet u, notaris, Dennis geeft me vijfhonderd euro als ik vandaag teken. Dat is veel geld voor een handtekening, hè?' },
       { q: 'Wat gaat uw BV precies doen, meneer Veldkamp?', a: '(kijkt op briefje) Internationale... handel. In goederen. (kijkt naar Dennis) Klopt dat?' },
-      { unlock: 'storter', q: 'Waarom stort Dennis het kapitaal?', a: 'DENNIS: Familie helpt familie, notaris. Zo zijn wij.' },
+      { unlock: 'storter', q: 'Waarom stort Dennis het kapitaal?', a: 'HENK: Dennis zegt dat dat beter is voor de belasting. Hij is slim, Dennis. Hij heeft ook een auto met een telefoon erin.' },
     ],
     react: { pass: 'HENK: Hè hè. Dat was het? Dan ga ik maar eens internationaal handelen.', refuse: 'DENNIS: Kom oom, we gaan. Er zijn notarissen genoeg.' },
     out: { pass: 'Veldkamp Global Trading BV is ingeschreven in het Handelsregister.', refuse: 'Henk Veldkamp en Dennis zijn vertrokken.', refuseReport: 'Het LOT bevestigt uw melding over een mogelijke katvanger-constructie.' },
@@ -298,7 +300,7 @@ export const CASES = {
         [['datum', 'Datum', '9 december 2026'], ['aanhef', 'Aanhef', 'de heer'], ['naam', 'Naam', 'Jan Hendriks'], ['geboren', 'Geboren', '22-08-1962'], ['object', 'Object', 'het weiland sectie B 1123'], ['koopsom', 'Koopsom', '€ 96.000']]),
     ],
     anomalies: [
-      { id: 'cash', a: 'betaal.wijze', b: 'circ.r2', label: 'Contante betaling boven € 10.000' },
+      { id: 'cash', a: 'betaal.wijze', b: 'circ.r2', alt: [['betaal.bedrag', 'circ.r2']], label: 'Contante betaling boven € 10.000' },
     ],
     questions: [
       { unlock: 'cash', q: 'Waar komt dat contante geld vandaan?', a: 'Van de melk. Dertig jaar lang elke maand een beetje in de kist. Mijn vrouw weet er niks van. Nou ja, nu wel.' },
@@ -365,7 +367,7 @@ export const CASES = {
         [['datum', 'Datum', '10 december 2026'], ['aanhef', 'Aanhef', 'de heer'], ['naam', 'Naam', 'Ronald Brouwer'], ['object', 'Object', 'Molenstraat 4 en 6 te Zandhoven'], ['koper', 'Koper', 'Zuidas Prime Invest BV'], ['koopsom', 'Koopsom', '€ 1.400.000']]),
     ],
     anomalies: [
-      { id: 'abc', a: 'akte.koopsom', b: 'grond.koopsom', label: 'Panden gisteren gekocht voor € 380.000, nu € 1.400.000' },
+      { id: 'abc', a: 'akte.koopsom', b: 'grond.koopsom', alt: [['akte.koopsom', 'circ.r3'], ['grond.sinds', 'circ.r3'], ['grond.sinds', 'akte.datum']], label: 'Panden gisteren gekocht voor € 380.000, nu € 1.400.000' },
     ],
     questions: [
       { unlock: 'abc', q: 'Weer een verdrievoudiging in één dag?', a: 'Zandhoven groeit, notaris. Ik ook.' },
@@ -407,8 +409,8 @@ export const CASES = {
         [['datum', 'Datum', '10 december 2026'], ['aanhef', 'Aanhef', 'de heer'], ['naam', 'Naam', 'Sjoerd de Vries'], ['geboren', 'Geboren', '14-03-1946'], ['object', 'Object', 'Havenkade 9-C te Zandhoven'], ['koopsom', 'Koopsom', '€ 238.000']]),
     ],
     anomalies: [
-      { id: 'vermist', a: 'id.nummer', b: 'reg.n3', label: 'Paspoortnummer staat in het Register Vermiste Documenten' },
-      { id: 'eigenaar', a: 'akte.naam', b: 'grond.eigenaar', label: 'Eigenaar is Sjoukje, verkoper heet nu Sjoerd' },
+      { id: 'vermist', a: 'id.nummer', b: 'reg.n3', alt: [['id.nummer', 'circ.r5']], label: 'Paspoortnummer staat in het Register Vermiste Documenten' },
+      { id: 'eigenaar', a: 'akte.naam', b: 'grond.eigenaar', alt: [['id.voornamen', 'grond.eigenaar'], ['id.geslacht', 'grond.eigenaar'], ['intake.aanhef', 'grond.eigenaar']], label: 'Eigenaar is Sjoukje, verkoper heet nu Sjoerd' },
     ],
     questions: [
       { unlock: 'eigenaar', q: 'Het appartement staat op naam van Sjoukje de Vries, niet Sjoerd.', a: 'Sjoukje is... mijn tante. Ik heb een volmacht. Thuis. Die kan ik mailen.' },
@@ -462,7 +464,7 @@ export const CASES = {
   },
 
   ronnie4_blij: {
-    day: 5, scene: true, when: [{ ronnie2: 'passeren', ronnie3: 'quiet' }], name: 'De heer R. Brouwer', portrait: 'ronnie',
+    day: 5, scene: true, when: [{ ronnie2: 'passeren', ronnie3: 'passeren' }], name: 'De heer R. Brouwer', portrait: 'ronnie',
     lines: ['Even een kerstpakketje brengen. Voor mijn favoriete notaris.', 'Er zit een fles champagne in. En iets wat u beter niet aan uw boekhouder laat zien.', 'Ik hoorde trouwens dat het Bureau Notarieel Toezicht vandaag langskomt. Toeval, hè?'],
   },
 
@@ -473,7 +475,7 @@ export const CASES = {
 
   sjoukje: {
     day: 5, kind: 'eerlijk', fee: 350, line: 'devries', when: [{ devries1: 'refuse', devries2: 'refuse' }], name: 'Mevrouw S. de Vries', portrait: 'sjoukje',
-    intro: ['Goedemorgen. Ik ben Sjoukje de Vries, van de Havenkade.', 'De politie belde dat iemand zich als mij heeft voorgedaan, hier. Ik schrok me rot. Nu ik toch hier ben: ik wil een testament laten maken. Je weet maar nooit.'],
+    intro: ['Goedemorgen. Ik ben Sjoukje de Vries, van de Havenkade.', 'Er belde een makelaar dat mijn appartement te koop stond. Een man had zich hier voor mij uitgegeven, zei uw secretaresse. Ik schrok me rot. Nu ik toch hier ben: ik wil een testament laten maken. Je weet maar nooit.'],
     docs: [
       intake({ aanhef: 'mevrouw', naam: 'S. de Vries', geboren: '14-03-1946', adres: 'Havenkade 9-C, Zandhoven', wens: 'Testament' }),
       id({ foto: PORTRAITS.sjoukje, naam: 'de Vries', voornamen: 'Sjoukje', geslacht: 'V', geboren: '14-03-1946', nummer: 'NW1010S4', geldig: '03-07-2029' }),
@@ -482,7 +484,7 @@ export const CASES = {
     ],
     anomalies: [],
     questions: [
-      { q: 'Wat goed dat u langskomt, mevrouw De Vries.', a: 'U heeft hem tegengehouden, zei de politie. Ik woon daar sinds 1979. Mijn man is er overleden. Dank u wel, notaris.' },
+      { q: 'Wat goed dat u langskomt, mevrouw De Vries.', a: 'U heeft hem weggestuurd, hoorde ik. Ik woon daar sinds 1979. Mijn man is er overleden. Dank u wel, notaris.' },
     ],
     react: { pass: 'Zo. Nu kunnen ze me niks meer maken. Dood of levend.', refuse: 'Ook u nu? Ik dacht dat u de goede was.' },
     out: { pass: 'Sjoukje de Vries stuurt een doos zelfgebakken kruidnoten.', refuse: 'Mevrouw De Vries dient een klacht in. Haar nichtje helpt met de brief.' },

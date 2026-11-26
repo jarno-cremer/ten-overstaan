@@ -18,7 +18,7 @@ CASES = json.loads(subprocess.check_output(["node", os.path.join(root, "tests", 
 errors, done = [], []
 with sync_playwright() as p:
     browser = p.chromium.launch()
-    page = browser.new_page(viewport={"width": 1440, "height": 900})
+    page = browser.new_page(viewport={"width": int(os.environ.get("VW", 1440)), "height": int(os.environ.get("VH", 900))})
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.on("console", lambda m: m.type == "error" and errors.append(m.text))
 

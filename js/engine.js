@@ -1,7 +1,7 @@
 // Spellogica zonder DOM: state, beslissingen, dagafsluiting, inspectie en eindes.
 import { CASES, DAYS, RULES, MISSING_REGISTER, LINES } from './data.js';
 
-export const START_KAS = 1000;
+export const START_KAS = 1500;
 export const HUUR = 350;
 export const SALARIS = 250;
 export const AFLOSSING = 4500;
@@ -12,7 +12,7 @@ export const DECISIONS = ['passeren', 'passeren_melden', 'weigeren', 'weigeren_m
 // reportBonus geldt alleen als er minstens één afwijking of observatie is vastgelegd.
 const RULESET = {
   eerlijk: {
-    passeren: {}, passeren_melden: {},
+    passeren: {}, passeren_melden: { vis: 6, letter: 'overmelding' },
     weigeren: { vis: 8, letter: 'klacht' }, weigeren_melden: { vis: 8, letter: 'klacht' },
   },
   formeel: {
@@ -24,6 +24,8 @@ const RULESET = {
     passeren_melden: { reportBonus: 5 },
     weigeren: { vis: 8, letter: 'klacht', hid: 10, miss: 'Meldplichtige transactie niet gemeld' },
     weigeren_melden: { vis: 8, letter: 'klacht', reportBonus: 5 },
+    // Bij een zaak met okRefuse (echt verdacht) is weigeren met vastgelegde afwijking gerechtvaardigd.
+    weigeren_melden_gegrond: { reportBonus: 5 },
   },
   fraude: {
     passeren: { hid: 25, miss: 'Frauduleuze akte gepasseerd', heavy: true },
@@ -34,6 +36,12 @@ const RULESET = {
 };
 
 export const IDEAL = { eerlijk: 'passeren', formeel: 'weigeren', melden: 'passeren_melden', fraude: 'weigeren_melden' };
+
+// Is deze beslissing (met deze vastgelegde punten) de juiste voor deze zaak?
+export function isCorrect(c, decision, flags = []) {
+  if (decision === IDEAL[c.kind]) return c.kind === 'eerlijk' || c.kind === 'formeel' || flags.length > 0;
+  return c.kind === 'melden' && c.okRefuse && decision === 'weigeren_melden' && flags.length > 0;
+}
 
 export function newGame() {
   return {
@@ -99,7 +107,12 @@ export function fieldValue(caseId, day, ref) {
 // Controleert of twee aangeklikte velden samen een afwijking vormen. Volgorde maakt niet uit.
 export function checkPair(caseId, refA, refB) {
   const c = CASES[caseId];
-  return (c.anomalies || []).find((an) => (an.a === refA && an.b === refB) || (an.a === refB && an.b === refA)) || null;
+  const same = ([a, b]) => (a === refA && b === refB) || (a === refB && b === refA);
+  return (c.anomalies || []).find((an) => anomalyPairs(an).some(same)) || null;
+}
+
+export function anomalyPairs(an) {
+  return [[an.a, an.b], ...(an.alt || [])];
 }
 
 export function availableQuestions(caseId, found) {
@@ -115,13 +128,15 @@ export function outcomeText(map, decision) {
 
 const LETTERS = {
   klacht: (c) => `Klacht ingediend bij de Tuchtkamer door ${c.name}: weigering zonder geldige reden (ministerieplicht). +8 toezichtsdruk.`,
+  overmelding: (c) => `Het LOT vraagt zich af waarom u de akte van ${c.name} heeft gemeld. Ongegronde meldingen kosten iedereen tijd. +6 toezichtsdruk.`,
   formeel: (c) => `Brief van het BNT: akte van ${c.name} gepasseerd met ongeldige legitimatie. Formele fout, +5 toezichtsdruk.`,
 };
 
 // Verwerkt een beslissing. flags = ids van gevonden afwijkingen + teksten van observaties.
 export function decide(state, caseId, decision, flags = []) {
   const c = CASES[caseId];
-  const eff = RULESET[c.kind][decision];
+  const gegrond = c.kind === 'melden' && c.okRefuse && decision === 'weigeren_melden' && flags.length > 0;
+  const eff = RULESET[c.kind][gegrond ? 'weigeren_melden_gegrond' : decision];
   state.decisions[caseId] = { decision, flags: [...flags] };
   if (decision.startsWith('passeren')) {
     state.kas += c.fee;
@@ -140,7 +155,8 @@ export function decide(state, caseId, decision, flags = []) {
       state.druk = Math.max(0, state.druk - eff.reportBonus);
       state.mail.push(`Het BNT noteert een zorgvuldige melding in het dossier ${c.name}. −${eff.reportBonus} toezichtsdruk.`);
     } else {
-      state.mail.push(`Het LOT meldt dat uw melding over ${c.name} onvoldoende onderbouwd is: er is geen afwijking vastgelegd.`);
+      state.druk += 3;
+      state.mail.push(`Het LOT meldt dat uw melding over ${c.name} onvoldoende onderbouwd is: er is geen afwijking vastgelegd. +3 toezichtsdruk.`);
     }
   }
   const out = outcomeText(c.out, decision);
@@ -184,18 +200,20 @@ export function lineResults(state) {
   const res = {};
   for (const line of Object.keys(LINES)) {
     const cases = Object.entries(CASES).filter(([cid, c]) => c.line === line && !c.scene && (c.kind === 'fraude' || c.kind === 'melden') && state.decisions[cid]);
-    res[line] = cases.length > 0 && cases.every(([cid, c]) => state.decisions[cid].decision === IDEAL[c.kind] && state.decisions[cid].flags.length > 0);
+    res[line] = cases.length > 0 && cases.every(([cid, c]) => isCorrect(c, state.decisions[cid].decision, state.decisions[cid].flags));
   }
   return res;
 }
 
 // Wordt aangeroepen na de dagafsluiting (en op vrijdag na de inspectie).
 export function checkEnding(state, { afterInspection = false, heavy = 0 } = {}) {
+  state.findings = state.misses.length;
   if (state.druk >= 100 || heavy >= 2) return (state.ending = 'ontzet');
   if (state.kas < 0) return (state.ending = 'failliet');
   if (!afterInspection) return null;
   const lines = lineResults(state);
-  if (Object.values(lines).every(Boolean)) return (state.ending = 'klokkenluider');
+  // Wie alles meldt, wordt door het LOT niet meer serieus genomen.
+  if (Object.values(lines).every(Boolean) && state.druk < 30) return (state.ending = 'klokkenluider');
   if (state.bribes >= 3000) return (state.ending = 'welvarend');
   return (state.ending = 'keurig');
 }
@@ -211,10 +229,12 @@ export const ENDINGS = {
     text: 'De Tuchtkamer acht bewezen dat de notaris de zorgplicht en de meldplicht ernstig heeft geschonden. De notaris wordt met onmiddellijke ingang uit het ambt ontzet. Het protocol wordt overgedragen aan notaris Hoekstra te Dorpdam.' },
   failliet: { title: 'Vonnis van de rechtbank', verdict: 'Faillissement',
     text: 'De rechtbank verklaart de notarispraktijk te Zandhoven in staat van faillissement. Ingrid heeft een baan gevonden bij notaris Hoekstra. Het naambord aan de Markt wordt geveild; bieding vanaf € 15.' },
-  keurig: { title: 'Brief van het Bureau Notarieel Toezicht', verdict: 'Keurig, maar krap',
-    text: 'Bij de steekproef zijn geen ernstige gebreken aangetroffen. De praktijk heeft de eerste week overleefd. De kas is mager, de dossiers zijn op orde. Maandag staat er weer een rij voor de deur.' },
-  welvarend: { title: 'Brief van het Bureau Notarieel Toezicht', verdict: 'Welvarend, met een schaduw',
-    text: 'Bij de steekproef zijn geen redenen gevonden voor verdere maatregelen. De praktijk draait uitstekend. In de la ligt een stapel enveloppen. Maandagochtend om negen uur gaat de telefoon. Het is Ronnie.' },
+  keurig: { title: 'Brief van het Bureau Notarieel Toezicht', verdict: 'Overleefd',
+    text: 'Bij de inspectie zijn geen gebreken aangetroffen. De praktijk heeft de eerste week overleefd. De kas is mager, de dossiers zijn op orde. Maandag staat er weer een rij voor de deur.',
+    textFindings: 'Bij de inspectie zijn gebreken aangetroffen. Het BNT legt een schriftelijke waarschuwing op en komt over drie maanden terug. De praktijk heeft de eerste week overleefd, maar niet ongeschonden.' },
+  welvarend: { title: 'Kasboek, vrijdagavond', verdict: 'Welvarend, met een schaduw',
+    text: 'Het BNT vond niets. De praktijk draait uitstekend. In de la ligt een stapel enveloppen. Maandagochtend om negen uur gaat de telefoon. Het is Ronnie.',
+    textFindings: 'Het BNT heeft een berisping opgelegd en de praktijk onder verscherpt toezicht gesteld. Toch klopt het kasboek als nooit tevoren: in de la ligt een stapel enveloppen. Maandagochtend om negen uur gaat de telefoon. Het is Ronnie.' },
   klokkenluider: { title: 'Zandhovens Dagblad, zaterdageditie', verdict: 'Fraudenetwerk opgerold',
     text: 'Politie en LOT hebben deze week een netwerk opgerold dat panden witwaste, katvangers inzette en ouderen bestal. "Dankzij zorgvuldige meldingen van een notaris", aldus de officier van justitie. Welke notaris? Dat mag niemand weten. U weet het wel.' },
 };

@@ -71,13 +71,13 @@ function startCase() {
   const cid = E.currentCaseId(S);
   if (!cid) return showDayEnd();
   const c = CASES[cid];
-  cur = { cid, found: [], obs: [], asked: new Set(), selected: null, decided: false, inspect: false,
+  cur = { cid, slot: S.idx, found: [], obs: [], asked: new Set(), selected: null, decided: false, inspect: false, gone: false,
     dialogue: (c.scene ? c.lines : c.intro).map((t) => ({ who: 'klant', text: t })) };
   renderDesk();
 }
 
 function clock() {
-  const mins = 9 * 60 + S.idx * 80;
+  const mins = 9 * 60 + (cur ? cur.slot : S.idx) * 80;
   return `${String(Math.floor(mins / 60)).padStart(2, '0')}:${String(mins % 60).padStart(2, '0')}`;
 }
 
@@ -129,13 +129,15 @@ function docHTML(d, i) {
 }
 
 function speakerHTML(t) {
-  const m = t.match(/^([A-Z]{3,}):\s*(.*)$/s);
-  return m ? `<b>${m[1][0] + m[1].slice(1).toLowerCase()}:</b> ${esc(m[2])}` : esc(t);
+  return esc(t).replace(/\b([A-Z]{3,}):/g, (_, w) => `<b>${w[0] + w.slice(1).toLowerCase()}:</b>`);
 }
 
 function renderDesk() {
+  const keep = { desk: app.querySelector('.desk')?.scrollTop || 0, counter: app.querySelector('.counter')?.scrollTop || 0, cid: renderDesk.last };
+  renderDesk.last = cur.cid;
   const c = CASES[cur.cid];
-  const docs = c.scene ? [] : E.deskDocs(cur.cid, S.day);
+  const rank = (d) => (d.id === 'circ' ? 0 : d.id === 'reg' ? 1 : 2);
+  const docs = c.scene ? [] : E.deskDocs(cur.cid, S.day).sort((a, b) => rank(a) - rank(b));
   const qs = c.scene ? [] : E.availableQuestions(cur.cid, cur.found);
   const notes = [...(c.anomalies || []).filter((a) => cur.found.includes(a.id)).map((a) => a.label), ...cur.obs];
   const tip = S.day === 1 && !c.scene ? tutorialTip() : '';
@@ -145,7 +147,7 @@ function renderDesk() {
     <aside class="counter">
       <div class="portrait-wrap">
         <div class="frame fld klant${cur.selected === 'klant' ? ' selected' : ''}${foundRefs().has('klant') ? ' flagged' : ''}" data-ref="klant">${portraitSVG(PORTRAITS[c.portrait])}</div>
-        ${c.companion ? `<div class="frame companion" title="Begeleider">${portraitSVG(PORTRAITS[c.companion])}</div>` : ''}
+        ${c.companion && !cur.gone ? `<div class="frame companion" title="Begeleider">${portraitSVG(PORTRAITS[c.companion])}</div>` : ''}
       </div>
       <div class="nameplate">${esc(c.name)}</div>
       <div class="dialogue" id="dlg">${cur.dialogue.map((l) => `<p class="say ${l.who}">${l.who === 'jij' ? '<b>Jij:</b> ' : ''}${speakerHTML(l.text)}</p>`).join('')}</div>
@@ -170,6 +172,10 @@ function renderDesk() {
 
   const dlg = document.getElementById('dlg');
   dlg.scrollTop = dlg.scrollHeight;
+  if (keep.cid === cur.cid) {
+    app.querySelector('.desk').scrollTop = keep.desk;
+    app.querySelector('.counter').scrollTop = keep.counter;
+  }
   app.querySelectorAll('[data-q]').forEach((b) => (b.onclick = () => ask(qs[+b.dataset.q])));
   app.querySelectorAll('[data-dec]').forEach((b) => (b.onclick = () => decideNow(b.dataset.dec)));
   app.querySelector('[data-act="inspect"]')?.addEventListener('click', toggleInspect);
@@ -195,7 +201,7 @@ function toast(msg, kind = '') {
   t.className = `toast show ${kind}`;
   t.textContent = msg;
   clearTimeout(toast.h);
-  toast.h = setTimeout(() => (t.className = 'toast'), 2600);
+  toast.h = setTimeout(() => (t.className = 'toast'), 4200);
 }
 
 function toggleInspect() {
@@ -203,6 +209,7 @@ function toggleInspect() {
   cur.inspect = !cur.inspect;
   cur.selected = null;
   renderDesk();
+  if (cur.inspect) toast('Inspectie aan: klik twee velden aan die elkaar tegenspreken. Ook de cliënt zelf telt mee.');
 }
 
 function clickField(ref) {
@@ -228,6 +235,7 @@ function ask(q) {
   cur.asked.add(q.q);
   cur.dialogue.push({ who: 'jij', text: q.q }, { who: 'klant', text: q.a });
   if (q.flag && !cur.obs.includes(q.flag)) cur.obs.push(q.flag);
+  if (q.dismiss) cur.gone = true;
   renderDesk();
 }
 
@@ -293,8 +301,8 @@ function showInspection() {
   app.innerHTML = `
   <main class="screen center">
     <article class="paper report">
-      <div class="doc-head">Bureau Notarieel Toezicht · Rapport steekproef</div>
-      <p>Inspecteur mr. drs. A. Kalkman heeft op ${esc(DAYS[E.LAST_DAY].date)} de dossiers van deze week ingezien.</p>
+      <div class="doc-head">Bureau Notarieel Toezicht · Inspectierapport</div>
+      <p>Inspecteur mr. drs. A. Kalkman heeft op ${esc(DAYS[E.LAST_DAY].date)} alle dossiers van deze week ingezien.</p>
       ${insp.found.length ? `<p>De volgende gebreken zijn aangetroffen. Elk gebrek telt bij een inspectie dubbel.</p>
         <ul>${insp.found.map((m) => `<li>${esc(m.text)} <b>+${m.pts}</b>${m.heavy ? ' (ernstig)' : ''}</li>`).join('')}</ul>` : '<p>Er zijn geen gebreken aangetroffen. De inspecteur knikt en neemt nog een koekje.</p>'}
       <p>Toezichtsdruk na inspectie: <b>${insp.druk}</b>.</p>
@@ -314,7 +322,7 @@ function showEnding() {
     <article class="paper ending ending-${S.ending}">
       <div class="doc-head">${esc(en.title)}</div>
       <h1 class="verdict">${esc(en.verdict)}</h1>
-      <p class="formula">${esc(en.text)}</p>
+      <p class="formula">${esc(S.findings && en.textFindings ? en.textFindings : en.text)}</p>
       <table class="stats">
         <tr><td>Kas</td><td class="num">${euro(S.kas)}</td></tr>
         <tr><td>Toezichtsdruk</td><td class="num">${S.druk}</td></tr>
